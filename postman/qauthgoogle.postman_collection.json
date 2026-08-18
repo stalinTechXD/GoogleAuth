@@ -1,0 +1,76 @@
+{
+  "info": {
+    "name": "qauthgoogle - Sign in with Google (OAuth 2.0)",
+    "description": "Collection for the ASP.NET Core 'Sign in with Google' OAuth 2.0 demo.\n\nNOTE: The login itself is an interactive, browser-based redirect flow and cannot be fully scripted in a single Postman request. Sign in via the browser first, then paste the '.AspNetCore.Cookies' value into the collection variable 'cookie' to call protected endpoints such as /account/me.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:7025",
+      "type": "string"
+    },
+    {
+      "key": "cookie",
+      "value": "",
+      "type": "string",
+      "description": "Value of the .AspNetCore.Cookies cookie copied from the browser after signing in."
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Start Login (open in browser)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/account/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["account", "login"]
+        },
+        "description": "Starts the OAuth 2.0 flow. This returns a 302 redirect to Google's consent screen and must be completed in a real browser."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Get My Profile (/account/me)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": ".AspNetCore.Cookies={{cookie}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/account/me",
+          "host": ["{{baseUrl}}"],
+          "path": ["account", "me"]
+        },
+        "description": "Returns the signed-in user's profile as JSON. Requires a valid auth cookie in the 'cookie' variable."
+      },
+      "response": []
+    },
+    {
+      "name": "3. Logout (/account/logout)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": ".AspNetCore.Cookies={{cookie}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/account/logout",
+          "host": ["{{baseUrl}}"],
+          "path": ["account", "logout"]
+        },
+        "description": "Clears the authentication cookie and redirects to '/'."
+      },
+      "response": []
+    }
+  ]
+}
